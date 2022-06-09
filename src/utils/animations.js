@@ -114,9 +114,9 @@ export function shiftAnimatedStyles (index, animatedValue, carouselProps) {
 // This means that the item with the higher zIndex (and therefore the tap receiver) remains the one AFTER the currently active item
 // The `elevation` property compensates for that only visually, which is not good enough
 export function stackScrollInterpolator (index, carouselProps) {
-    const range = IS_ANDROID ?
-        [1, 0, -1, -2, -3] :
-        [3, 2, 1, 0, -1];
+    const range = IS_ANDROID ? [3, 2, 1, 0, -1, -2, -3] : [3, 2, 1, 0, -1, -2, -3];
+
+
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
     const outputRange = range;
 
@@ -144,58 +144,58 @@ export function stackAnimatedStyles (index, animatedValue, carouselProps, cardOf
 
     const opacityOutputRange = carouselProps.inactiveSlideOpacity === 1 ? [1, 1, 1, 0] : [1, 0.75, 0.5, 0];
 
-    return IS_ANDROID ? {
-        // elevation: carouselProps.data.length - index, // fix zIndex bug visually, but not from a logic point of view
-        opacity: animatedValue.interpolate({
-            inputRange: [-3, -2, -1, 0],
-            outputRange: opacityOutputRange.reverse(),
-            extrapolate: 'clamp'
-        }),
-        transform: [{
-            scale: animatedValue.interpolate({
-                inputRange: [-2, -1, 0, 1],
-                outputRange: [card2Scale, card1Scale, 1, card1Scale],
-                extrapolate: 'clamp'
-            })
-        }, {
-            [translateProp]: animatedValue.interpolate({
-                inputRange: [-3, -2, -1, 0, 1],
-                outputRange: [
-                    getTranslateFromScale(-3, card2Scale),
-                    getTranslateFromScale(-2, card2Scale),
-                    getTranslateFromScale(-1, card1Scale),
-                    0,
-                    sizeRef * 0.5
-                ],
-                extrapolate: 'clamp'
-            })
-        }]
-    } : {
-        zIndex: carouselProps.data.length - index,
-        opacity: animatedValue.interpolate({
-            inputRange: [0, 1, 2, 3],
-            outputRange: opacityOutputRange,
-            extrapolate: 'clamp'
-        }),
-        transform: [{
-            scale: animatedValue.interpolate({
-                inputRange: [-1, 0, 1, 2],
-                outputRange: [card1Scale, 1, card1Scale, card2Scale],
-                extrapolate: 'clamp'
-            })
-        }, {
-            [translateProp]: animatedValue.interpolate({
-                inputRange: [-1, 0, 1, 2, 3],
-                outputRange: [
-                    -sizeRef * 0.5,
-                    0,
-                    getTranslateFromScale(1, card1Scale),
-                    getTranslateFromScale(2, card2Scale),
-                    getTranslateFromScale(3, card2Scale)
-                ],
-                extrapolate: 'clamp'
-            })
-        }]
+    return IS_ANDROID ? { // elevation: carouselProps.data.length - index, // fix zIndex bug visually, but not from a logic point of view 
+        zIndex: animatedValue.interpolate(
+            { 
+                inputRange: [-3, -2, -1, 0, 1, 2, 3], 
+                outputRange: [0, 1, 2, 3, 2, 1, 0], 
+                extrapolate: 'clamp' 
+            }
+            ), 
+            opacity: animatedValue.interpolate(
+                { 
+                    inputRange: [ -3, -2, -1, 0, 1, 2, 3], 
+                    outputRange: [0, 0.5, 0.5, 1, 0.5, 0.5, 0], 
+                    extrapolate: 'clamp' 
+                }
+                ), 
+                transform: [
+                    { 
+                        scale: animatedValue.interpolate(
+                            { 
+                                inputRange: [-2, -1, 0, 1, 2], 
+                                outputRange: [card2Scale, card1Scale, 1, card1Scale, card2Scale], 
+                                extrapolate: 'clamp' 
+                            }
+                            ) 
+                        }, 
+                        { 
+                            [translateProp]: animatedValue.interpolate({ 
+                                inputRange: [-3, -2, -1, 0, 1, 2, 3], 
+                                outputRange: [ 250, 250, 85, 0, -75, -220, 0 ], 
+                                extrapolate: 'clamp' 
+                            }) 
+                        }] 
+                    } : { zIndex: animatedValue.interpolate({ 
+                        inputRange: [-3, -2, -1, 0, 1, 2, 3], 
+                        outputRange: [0, 1, 2, 3, 2, 1, 0], 
+                        extrapolate: 'clamp' 
+                    }), 
+                        opacity: animatedValue.interpolate({ 
+                            inputRange: [ -3, -2, -1, 0, 1, 2, 3],
+                            outputRange: [0, 0.5, 0.7, 1, 0.7, 0.5, 0],
+                            extrapolate: 'clamp' }),
+                            transform: [{ 
+                                scale: animatedValue.interpolate({ 
+                                    inputRange: [-2, -1, 0, 1, 2], 
+                                    outputRange: [card2Scale, card1Scale, 1, card1Scale, card2Scale], 
+                                    extrapolate: 'clamp' }) 
+                                }, 
+                                { [translateProp]: animatedValue.interpolate({ 
+                                    inputRange: [-3, -2, -1, 0, 1, 2, 3], 
+                                    outputRange: [ 240, 240, 105, 0, -105, -240, 0 ], 
+                                    extrapolate: 'clamp' }) 
+                                }] 
     };
 }
 
